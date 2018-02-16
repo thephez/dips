@@ -8,11 +8,11 @@ This document discusses the possibility of having a non-Evolution option for Pri
 
 Based on the description [here](https://mydashwallet.org/AboutPrivateSend), this is very similar to what MyDashWallet does (although here a trusted Dash Core node would be used - your own). In this case, the Dash Core full node actually issues the PrivateSend transaction on behalf of the mobile wallet.
 
-Building a service to receive the destination address from the mobile wallet would be the main thing to develop for this. Current RPC commands already enable monitoring [wallet balance](https://dash-docs.github.io/en/developer-reference#getbalance), [controlling mixing (start/stop)](https://dash-docs.github.io/en/developer-reference#privatesend), and [sending PrivateSend transactions](https://dash-docs.github.io/en/developer-reference#sendtoaddress)
+Building a service to receive the destination address from the mobile wallet would be the main thing to develop for this (potentially already exists in [MyDashWallet's repo?](https://github.com/DeltaEngine/MyDashWallet)). Current RPC commands already enable monitoring [wallet balance](https://dash-docs.github.io/en/developer-reference#getbalance), [controlling mixing (start/stop)](https://dash-docs.github.io/en/developer-reference#privatesend), and [sending PrivateSend transactions](https://dash-docs.github.io/en/developer-reference#sendtoaddress).
 
-1. Mobile wallet sends enough funds to the Dash Core trusted proxy to cover mixing collateral/fees and the amount to send. 
+1. Mobile wallet sends enough funds to the Dash Core trusted proxy to cover mixing collateral/fees and the amount to send
 
-2. Mobile wallet also provides a destination address and amount to be sent to it. 
+2. Mobile wallet also provides a destination address and amount to be sent to it
 
 3. Dash Core trusted proxy sends a PrivateSend transaction:
  - Immediately if it contains a sufficient balance
@@ -43,8 +43,10 @@ When Dash Core receives a mixing request, it starts mixing for either the defaul
 
 On the final round of mixing, outputs from the mixing request are provided in the [`dsi` message](https://dash-docs.github.io/en/developer-reference#dsi) (instead of outputs internal to Dash Core's wallet). This results in  the mixed funds (sent by the [`dstx` message](https://dash-docs.github.io/en/developer-reference#dstx)) being sent directly to the mobile wallet.
 
+At this point, the mobile wallet could send PrivateSend transactions with the same level of privacy/convenience as Dash Core. As mentioned above, it would be necessary for the wallet to properly construct PrivateSend transactions using the rules for fees, change, etc. that Dash Core does.
+
 
 ## Credits
 
-This document was derived in part from a discussion on Discord with TheDesertLynx and hashengineering.
+This document was derived in part from a discussion on Discord with _TheDesertLynx_ and _hashengineering_.
 
