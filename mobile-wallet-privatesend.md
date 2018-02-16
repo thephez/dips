@@ -23,7 +23,7 @@ Any remaining fund are either refunded or mixed so there is a liquidity balance 
 
 ## Advanced Case (Dash Core as PrivateSend mixer only)
 
-This results in the mixed PrivateSend funds being sent directly to the mobile wallet so that PrivateSend transactions can be sent directly from it without requiring access to a full node for issuing a PrivateSend transaction.
+This results in the mixed PrivateSend funds being sent directly to the mobile wallet so that PrivateSend transactions can be sent directly from it without requiring access to a full node.
 
 To support this, Dash Core would need to provide a method for inserting outputs not belonging to its wallet into the [`dsi` message](https://dash-docs.github.io/en/developer-reference#dsi).
 
