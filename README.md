@@ -34,6 +34,7 @@ Number | Layer | Title | Owner | Type | Status
 [15](dip-0015.md) | Applications | DashPay | Samuel Westrich | Standard | Proposed
 [16](dip-0016.md) | Applications | Headers First Synchronization on Simple Payment Verification Wallets | Samuel Westrich | Informational | Proposed
 [20](dip-0020.md) | Consensus | Dash Opcode Updates | Mart Mangus | Standard | Proposed
+[22](dip-0022.md) | Consensus | Multi-Quorum ChainLocks | UdjinM6, dustinface | Standard | Proposed
 
 ## License
 
