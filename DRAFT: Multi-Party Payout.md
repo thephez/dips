@@ -11,14 +11,14 @@
 
 ## Table of Contents
 
-- [Table of Contents](#table-of-contents)
-- [Abstract](#abstract)
-- [Motivation and Previous System](#motivation-and-previous-system)
-  - [Problems with the previous system](#problems-with-the-previous-system)
-- [Prior Work](#prior-work)
-- [Registering a Masternode (ProRegTx) and Updating Registrar of Masternode (ProUpRegTx)](#registering-a-masternode-proregtx-and-updating-registrar-of-masternode-proupregtx)
-  - [Validation Rules](#validation-rules)
-- [Copyright](#copyright)
+* [Table of Contents](#table-of-contents)
+* [Abstract](#abstract)
+* [Motivation and Previous System](#motivation-and-previous-system)
+  * [Problems with the previous system](#problems-with-the-previous-system)
+* [Prior Work](#prior-work)
+* [Registering a Masternode (ProRegTx) and Updating Registrar of Masternode (ProUpRegTx)](#registering-a-masternode-proregtx-and-updating-registrar-of-masternode-proupregtx)
+  * [Validation Rules](#validation-rules)
+* [Copyright](#copyright)
 
 ## Abstract
 
@@ -28,8 +28,8 @@ This DIP builds on the chain consensus for masternode lists laid forth in DIP000
 
 In the previous system, Masternodes gained entry to the masternode list after the owner created a ProRegTx. This tx provided key IDs for up-to 2 roles that would receive masternode rewards payouts:
 
- * Owner
- * Operator
+* Owner
+* Operator
 
 ### Problems with the previous system
 
