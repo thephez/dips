@@ -43,7 +43,7 @@ Paying rewards to only two addresses based on a single value field prevents auto
 
 ## Registering a Masternode (ProRegTx) and Updating Registrar of Masternode (ProUpRegTx)
 
-We propose introducing version 2 of these transaction types replacing `scriptPayout` and `scriptPayoutSize` fields with `payoutShares` and `payoutSharesSize` correspondingly.
+We propose introducing version 2 of these transaction types to replace the `scriptPayout` and `scriptPayoutSize` fields with `payoutShares` and `payoutSharesSize` respectively.
 
 | Field | Type | Size | Description |
 | --- | --- | --- | --- |
@@ -58,11 +58,11 @@ Each `payoutShare` item should have the following structure:
 | scriptPayout | Script | Variable | Payee script (p2pkh/p2sh) |
 | payoutShareReward | uint_16 | 2 | A value from 0 to 10000 |
 
-To prove ownership of external collaterals masternode owner must set `payloadSig` of the ProRegTx to a valid signature which signs the following message:
+To prove ownership of external collaterals, masternode owners must sign the following message and use the resulting signature as the ProRegTx `payloadSig`:
 
 `<magicString><payoutSharesStr>|<operatorReward>|<ownerKeyAddress>|<votingKeyAddress>|<payloadHash>`
 
-where `payoutSharesStr` is
+Where `payoutSharesStr` is:
 
 `address(<payoutShares>[0].<scriptPayout>)>|<payoutShares>[0].<payoutShareReward>|...|address(<payoutShares>[n].<scriptPayout>)>|<payoutShares>[n].<payoutShareReward>`
 
