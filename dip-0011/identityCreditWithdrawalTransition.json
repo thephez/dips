@@ -8,9 +8,9 @@
             "$comment": "Maximum equals the latest Identity protocol version"
         },
         "type": {
-            "const": 5,
+            "const": 6,
             "description": "State transition type",
-            "$comment": "Identity Update Transition is type 5"
+            "$comment": "Identity Credit Withdrawal Transition is type 6"
         },
         "identityId": {
             "type": "string",
@@ -18,40 +18,37 @@
             "minLength": 42,
             "maxLength": 44,
             "pattern": "^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$",
-            "description": "Identity ID that should be updated.",
-            "$comment": "Identity with the specified ID must exist and contain the key that was used to sign the state transition"
+            "description": "Identity ID withdrawing credits",
+            "$comment": "Identity with the specified ID must exist"
         },
-        "revision": {
+        "amount": {
             "type": "integer",
-            "minimum": 0,
-            "description": "Identity update revision",
-            "$comment": "Must be incremented by one with each update"
+            "minimum": 1000,
+            "description": "Amount of credits to withdraw"
+        },
+        "coreFeePerByte": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4294967295,
+            "description": "Fee per byte for the Core chain withdrawal transaction"
+        },
+        "pooling": {
+            "type": "integer",
+            "enum": [0, 1, 2],
+            "description": "Withdrawal pooling option. 0 - Standard, 1 - Never, 2 - If Available"
+        },
+        "outputScript": {
+            "type": "string",
+            "contentEncoding": "base64",
+            "minLength": 31,
+            "maxLength": 34,
+            "description": "Core chain output script specifying the destination address",
+            "$comment": "23-25 bytes base64 encoded"
         },
         "nonce": {
             "type": "integer",
             "minimum": 0,
             "description": "Unique value to prevent replay attacks"
-        },
-        "addPublicKeys": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 15000,
-            "uniqueItems": true,
-            "items": "IdentityPublicKeyInCreation",
-            "description": "Public keys to add",
-            "$comment": "The overall number of identity public keys must not be greater than 15000"
-        },
-        "disablePublicKeys": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 15000,
-            "uniqueItems": true,
-            "items": {
-                "type": "integer",
-                "minimum": 0,
-                "description": "Identity public key ID",
-                "$comment": "Provided key(s) must exist and be enabled"
-            }
         },
         "userFeeIncrease": {
             "type": "integer",
@@ -61,7 +58,8 @@
         "signaturePublicKeyId": {
             "type": "integer",
             "minimum": 0,
-            "description": "The ID of public key used to sign the state transition"
+            "description": "The ID of public key used to sign the state transition",
+            "$comment": "Must be a key with TRANSFER purpose (purpose 3)"
         },
         "signature": {
             "type": "string",
@@ -71,19 +69,14 @@
             "description": "Cryptographic signature of the state transition"
         }
     },
-    "anyOf": [
-        {
-            "required": ["addPublicKeys"]
-        },
-        {
-            "required": ["disablePublicKeys"]
-        }
-    ],
     "required": [
         "protocolVersion",
         "type",
         "identityId",
-        "revision",
+        "amount",
+        "coreFeePerByte",
+        "pooling",
+        "outputScript",
         "nonce",
         "signaturePublicKeyId",
         "signature"

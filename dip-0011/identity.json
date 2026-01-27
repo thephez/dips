@@ -18,10 +18,10 @@
         },
         "publicKeys": {
             "type": "array",
-            "minItems": 5,
-            "maxItems": 255,
+            "minItems": 1,
+            "maxItems": 15000,
             "uniqueItems": true,
-            "items": IdentityPublicKey,
+            "items": "IdentityPublicKey"
         },
         "balance": {
             "type": "integer",
@@ -33,17 +33,12 @@
             "minimum": 0,
             "description": "Identity update revision",
             "$comment": "Incremented by one with each new update so that the update will fail if the underlying data is modified between reading and writing"
-        },
-        "isEnabled": {
-            "type": "boolean",
-            "$comment": "A disabled identity can't be updated, used for State Transition signing or any other operations"
-        },
+        }
     },
     "required": [
         "id",
         "publicKeys",
         "balance",
-        "revision",
-        "isEnabled"
+        "revision"
     ]
 }
