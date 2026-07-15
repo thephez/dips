@@ -6,100 +6,109 @@
             "type": "integer",
             "minimum": 0,
             "description": "Public key ID",
-            "$comment": "Must be unique for the identity. It can’t be changed after adding a key. Included when signing state transitions to indicate which identity key was used to sign."
+            "$comment": "Must be unique for the identity. It can't be changed after adding a key. Included when signing state transitions to indicate which identity key was used to sign."
         },
         "type": {
             "type": "integer",
-            "enum": [
-                0,
-                1
-            ],
-            "description": "Public key type. 0 - EC Secp256k1, 1 - BLS 12-381",
-            "$comment": "It can’t be changed after adding a key"
+            "enum": [0, 1, 2, 3, 4],
+            "description": "Public key type. 0 - ECDSA Secp256k1, 1 - BLS 12-381, 2 - ECDSA Hash160, 3 - BIP13 Script Hash, 4 - EDDSA 25519 Hash160",
+            "$comment": "It can't be changed after adding a key"
         },
         "purpose": {
             "type": "integer",
-            "enum": [
-                0,
-                1,
-                2,
-                3
-            ],
-            "description": "Public key purpose. 0 - Authentication, 1 - Encryption, 2 - Decryption, 3 - Encryption and Decryption",
-            "$comment": "It can’t be changed after adding a key"
+            "enum": [0, 1, 2, 3, 4, 5, 6],
+            "description": "Public key purpose. 0 - Authentication, 1 - Encryption, 2 - Decryption, 3 - Transfer, 4 - System, 5 - Voting, 6 - Owner",
+            "$comment": "It can't be changed after adding a key"
         },
-        "level": {
+        "securityLevel": {
             "type": "integer",
-            "enum": [
-                0,
-                1,
-                2,
-                3
-            ],
+            "enum": [0, 1, 2, 3],
             "description": "Public key security level. 0 - Master, 1 - Critical, 2 - High, 3 - Medium",
-            "$comment": "It can’t be changed after adding a key"
+            "$comment": "It can't be changed after adding a key"
         },
         "data": {
             "type": "string",
             "contentEncoding": "base64",
             "pattern": "^([A-Za-z0-9+/])+$",
-            "description": "Base64-encoded raw public key",
-            "$comment": "It must be a valid key of the specified type and unique for the identity. It can’t be changed after adding a key"
+            "description": "Base64-encoded raw public key or key hash",
+            "$comment": "It must be a valid key of the specified type and unique for the identity (for key types 0 and 1). It can't be changed after adding a key"
         },
-        "ownershipProof": {
-            "type": "string",
-            "contentEncoding": "base64",
-            "pattern": "^([A-Za-z0-9+/])+$",
-            "description": "Base64-encoded signature of the owner unique identifier",
-            "$comment": "This proves ownership of the key. It can’t be changed after adding a key"
+        "readOnly": {
+            "type": "boolean",
+            "description": "Whether this key is read-only and cannot be disabled",
+            "$comment": "Defaults to false if not specified"
+        },
+        "contractBounds": {
+            "type": "object",
+            "description": "Optional bounds restricting key usage to specific contract scope",
+            "oneOf": [
+                {
+                    "properties": {
+                        "type": { "const": 0 },
+                        "id": {
+                            "type": "string",
+                            "contentEncoding": "base58",
+                            "minLength": 42,
+                            "maxLength": 44
+                        }
+                    },
+                    "required": ["type", "id"],
+                    "$comment": "SingleContract - key can only be used within a specific contract"
+                },
+                {
+                    "properties": {
+                        "type": { "const": 1 },
+                        "id": {
+                            "type": "string",
+                            "contentEncoding": "base58",
+                            "minLength": 42,
+                            "maxLength": 44
+                        },
+                        "documentTypeName": {
+                            "type": "string"
+                        }
+                    },
+                    "required": ["type", "id", "documentTypeName"],
+                    "$comment": "SingleContractDocumentType - key can only be used within a specific contract and document type"
+                }
+            ]
         },
         "disabledAt": {
             "type": "integer",
             "minimum": 0,
-            "description": "Timestamp indicating that the key was disabled at specified time. Although disabled keys cannot be updated, they can be used for signature verification and signing Identity Disable Transitions. Timestamp must not be more than 5 minutes before or 5 minutes after the current platform chain block time"
+            "description": "Timestamp indicating that the key was disabled at specified time. Although disabled keys cannot be updated, they can be used for signature verification. Timestamp must not be more than 5 minutes before or 5 minutes after the current platform chain block time"
         }
     },
     "allOf": [
         {
             "if": {
-                "properties": {
-                    "type": {
-                        "const": 0
-                    }
-                }
+                "properties": { "type": { "const": 0 } }
             },
             "then": {
                 "properties": {
-                    "data": {
-                        "minLength": 44,
-                        "maxLength": 44
-                    },
-                    "ownershipProof": {
-                        "minLength": 87,
-                        "maxLength": 87
-                    }
+                    "data": { "minLength": 44, "maxLength": 44 }
                 }
             }
         },
         {
             "if": {
-                "properties": {
-                    "type": {
-                        "const": 1
-                    }
-                }
+                "properties": { "type": { "const": 1 } }
             },
             "then": {
                 "properties": {
-                    "data": {
-                        "minLength": 64,
-                        "maxLength": 64
-                    },
-                    "ownershipProof": {
-                        "minLength": 128,
-                        "maxLength": 128
-                    }
+                    "data": { "minLength": 64, "maxLength": 64 }
                 }
+            }
+        },
+        {
+            "if": {
+                "properties": { "type": { "enum": [2, 3, 4] } }
+            },
+            "then": {
+                "properties": {
+                    "data": { "minLength": 28, "maxLength": 28 }
+                },
+                "$comment": "20 bytes base64 encoded = 28 characters"
             }
         }
     ],
@@ -108,8 +117,7 @@
         "type",
         "data",
         "purpose",
-        "level",
-        "ownershipProof"
+        "securityLevel"
     ],
     "additionalProperties": false
 }
